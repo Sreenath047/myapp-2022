@@ -4,9 +4,44 @@ pipeline{
       pollSCM '* * * * *'
     }
     stages{
-        stage("SCM"){
+        stage("Maven Build"){
+            when{
+                branch "develop"
+            }
             steps{
-               echo "job ran.....again and again"
+               sh "mvn package"
+            }
+        }
+        stage("Sonar Qube"){
+            when{
+                branch "develop"
+            }
+            steps{
+               echo "Sonar Qube Analysis...."
+            }
+        }
+        stage("Nexus"){
+            when{
+                branch "develop"
+            }
+            steps{
+               echo "Uploading artifacts to Nexus....."
+            }
+        }
+        stage("Deploy to QA"){
+            when{
+                branch "qa"
+            }
+            steps{
+               echo "Deploying to QA......."
+            }
+        }
+        stage("Deploy to Production"){
+            when{
+                branch "prod"
+            }
+            steps{
+               echo "Deploying to production......"
             }
         }
     }
